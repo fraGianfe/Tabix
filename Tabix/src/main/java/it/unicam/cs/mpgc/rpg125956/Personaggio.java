@@ -6,7 +6,6 @@ import java.util.List;
 public class Personaggio {
 
     private String nome;
-    private List<Abilita> abilita;
     private Inventario inventario;
     private Statistiche statistiche;
     private int livello;
@@ -27,7 +26,7 @@ public class Personaggio {
         this.energia = energiaMax;
         this.esperienza = 0;
         this.esperienzaPerLivello = 100;
-        this.abilita = new ArrayList<>();
+        List<Abilita> abilita = new ArrayList<>();
         this.inventario = new Inventario();
         this.statistiche = new Statistiche();
     }
@@ -103,4 +102,11 @@ public class Personaggio {
         return energiaMax;
     }
 
+    public String getNome() {
+        return nome;}
+
+    public Inventario getInventario() {
+        return inventario;
+    }
 }
+

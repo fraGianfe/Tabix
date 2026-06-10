@@ -5,26 +5,32 @@ import java.util.List;
 
 public class Cella implements Ambiente {
 
-    private final int x;
-    private final int y;
-    private final TipoAmbiente tipo;
     private boolean visitata;
-    private List<Risorsa> risorse;
-    private List<Nemico> nemici;
-    private String descrizione;
 
 
     public Cella(int x, int y, TipoAmbiente tipo) {
-        this.x = x;
-        this.y = y;
-        this.tipo = tipo;
         this.visitata = false;
-        this.risorse= new ArrayList<>();
-        this.nemici= new ArrayList<>();
-        this.descrizione = tipo.name().toLowerCase();
+        List<Risorsa> risorse = new ArrayList<>();
+        List<Nemico> nemici = new ArrayList<>();
+        String descrizione = tipo.name().toLowerCase();
 
     }
 
+    @Override
+    public <Nemico> List<Nemico> getNemiciPresenti() {
+        return List.of();
+    }
 
+    @Override
+    public <Risorsa> List<Risorsa> getRisorseDisponibili() {
+        return List.of();
+    }
 
+    public boolean isVisitata() {
+        return visitata;
+    }
+
+    public void setVisitata(boolean visitata) {
+        this.visitata = visitata;
+    }
 }

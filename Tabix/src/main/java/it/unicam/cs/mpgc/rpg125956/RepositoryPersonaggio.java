@@ -1,5 +1,10 @@
 package it.unicam.cs.mpgc.rpg125956;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 public class RepositoryPersonaggio implements Repository<Personaggio, String> {
     private static final String PERCORSO = "dati/personaggi.json";
     private final ObjectMapper mapper; // Jackson
