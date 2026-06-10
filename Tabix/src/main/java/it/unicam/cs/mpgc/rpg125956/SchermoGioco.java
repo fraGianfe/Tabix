@@ -84,9 +84,8 @@ public class SchermoGioco extends BorderPane {
         }
     }
 
-    // ===================================================================
+
     //  Costruzione layout
-    // ===================================================================
 
     private void costruisciLayout() {
         // TOP — barra di stato
@@ -116,6 +115,7 @@ public class SchermoGioco extends BorderPane {
         pannelloInfo.setStyle("-fx-background-color: #eceff1;");
         setRight(pannelloInfo);
     }
+
 
     private void costruisciGriglia(GridPane griglia) {
         Mappa mappa = gestorePartita.getMappa();
@@ -148,7 +148,7 @@ public class SchermoGioco extends BorderPane {
         Button bOvest = creaBotone("◀ Ovest", Direzione.OVEST);
         Button bEst   = creaBotone("▶ Est",   Direzione.EST);
 
-        Label suggerimento = new Label("  ⌨  Frecce / WASD per muoverti");
+        Label suggerimento = new Label("  ⌨  Frecce / W-A-S-D per muoverti");
         suggerimento.setStyle("-fx-text-fill: #90a4ae; -fx-font-size: 11;");
 
         HBox bottom = new HBox(10, bOvest, bNord, bSud, bEst, suggerimento);
@@ -173,9 +173,6 @@ public class SchermoGioco extends BorderPane {
         return btn;
     }
 
-    // ===================================================================
-    //  Aggiornamento UI
-    // ===================================================================
 
     private void aggiornaPosizione() {
         Esploratore esp = gestorePartita.getEsploratore();
@@ -265,24 +262,44 @@ public class SchermoGioco extends BorderPane {
      *   6 = stivali  #37474F (grigio scuro)
      */
     private Canvas creaSprite() {
+//        int[][] pixel = {
+//            { 0, 0, 2, 2, 2, 2, 0, 0 },   // capelli (top)
+//            { 0, 2, 1, 1, 1, 1, 2, 0 },   // testa
+//            { 0, 1, 4, 1, 1, 4, 1, 0 },   // occhi
+//            { 0, 1, 1, 1, 3, 1, 1, 0 },   // bocca
+//            { 0, 5, 5, 5, 5, 5, 5, 0 },   // busto
+//            { 5, 5, 0, 5, 5, 0, 5, 5 },   // busto/braccia
+//            { 0, 0, 5, 5, 5, 5, 0, 0 },   // gambe
+//            { 0, 0, 6, 0, 0, 6, 0, 0 },   // stivali
+//        };
         int[][] pixel = {
-            { 0, 0, 2, 2, 2, 2, 0, 0 },   // capelli (top)
-            { 0, 2, 1, 1, 1, 1, 2, 0 },   // testa
-            { 0, 1, 4, 1, 1, 4, 1, 0 },   // occhi
-            { 0, 1, 1, 1, 3, 1, 1, 0 },   // bocca
-            { 0, 5, 5, 5, 5, 5, 5, 0 },   // busto
-            { 5, 5, 0, 5, 5, 0, 5, 5 },   // busto/braccia
-            { 0, 0, 5, 5, 5, 5, 0, 0 },   // gambe
-            { 0, 0, 6, 0, 0, 6, 0, 0 },   // stivali
+                { 0, 0, 2, 2, 2, 2, 0, 0 },   // Capelli biondi (top)
+                { 0, 2, 1, 1, 1, 1, 2, 0 },   // Viso e capelli ai lati
+                { 0, 1, 3, 1, 1, 3, 1, 0 },   // Occhi determinati
+                { 0, 4, 1, 1, 1, 1, 4, 0 },   // Colletto della tunica e mantello
+                { 0, 4, 4, 5, 5, 4, 4, 0 },   // Tunica verde con spallacci in cuoio
+                { 4, 4, 4, 7, 7, 4, 4, 4 },   // Cintura con fibbia d'oro al centro
+                { 0, 0, 4, 0, 0, 4, 0, 0 },   // Gambe/pantaloni verdi
+                { 0, 0, 6, 0, 0, 6, 0, 0 }    // Stivali robusti da viaggio
         };
+//        Color[] colori = {
+//            Color.TRANSPARENT,        // 0
+//            Color.web("#FFCC80"),      // 1 pelle
+//            Color.web("#4E342E"),      // 2 capelli
+//            Color.web("#EF5350"),      // 3 bocca
+//            Color.web("#1A237E"),      // 4 occhi
+//            Color.web("#1565C0"),      // 5 corpo
+//            Color.web("#37474F"),      // 6 stivali
+//        };
         Color[] colori = {
-            Color.TRANSPARENT,        // 0
-            Color.web("#FFCC80"),      // 1 pelle
-            Color.web("#4E342E"),      // 2 capelli
-            Color.web("#EF5350"),      // 3 bocca
-            Color.web("#1A237E"),      // 4 occhi
-            Color.web("#1565C0"),      // 5 corpo
-            Color.web("#37474F"),      // 6 stivali
+                Color.TRANSPARENT,          // 0
+                Color.web("#FFD54F"),       // 1 pelle
+                Color.web("#FFB300"),       // 2 capelli
+                Color.web("#263238"),       // 3 occhi
+                Color.web("#2E7D32"),       // 4 vestito verde
+                Color.web("#795548"),       // 5 cuoio
+                Color.web("#4E342E"),       // 6 stivali
+                Color.web("#FFD700")        // 7 fibbia oro
         };
 
         int dimensione = 8 * PIXEL_SPRITE; // = 40px

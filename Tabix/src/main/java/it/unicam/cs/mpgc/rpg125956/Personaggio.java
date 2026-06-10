@@ -1,9 +1,6 @@
 package it.unicam.cs.mpgc.rpg125956;
 
-/**
- * Rappresenta il personaggio giocante.
- * Gestisce statistiche, salute, energia ed esperienza.
- */
+
 public class Personaggio implements Vivente {
 
     private final String nome;

@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Punto d'ingresso dell'applicazione JavaFX.
- * Gestisce il cambio di schermata tra creazione personaggio e gioco.
- */
+
 public class App extends Application {
 
     private static Stage primaryStage;
