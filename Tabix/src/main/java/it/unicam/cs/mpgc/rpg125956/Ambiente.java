@@ -1,9 +1,11 @@
 package it.unicam.cs.mpgc.rpg125956;
 
+import java.util.List;
+
 public interface Ambiente {
     String getNome();
     TipoAmbiente getTipo();
-    List<Risorsa> getRisorseDisponibili();
-    List<Nemico> getNemiciPresenti();
-    String getDescrizione()
+    <Risorsa> List<Risorsa> getRisorseDisponibili();
+    <Nemico> List<Nemico> getNemiciPresenti();
+    String getDescrizione();
 }
