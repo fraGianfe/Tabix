@@ -1,32 +1,47 @@
 package it.unicam.cs.mpgc.rpg125956;
 
+/**
+ * Coordina i componenti principali della partita:
+ * personaggio, mappa ed esploratore.
+ * È il punto d'ingresso della logica di gioco per l'interfaccia grafica.
+ */
 public class GestorePartita {
 
     private final Personaggio personaggio;
+    private final Mappa mappa;
     private final Esploratore esploratore;
-    private final GestoreRisorse gestoreRisorse;
-    private final GestoreNemici gestoreNemici;
-    private final GestoreCombattimento gestoreCombattimento;
-    private final Repository<Personaggio, String> repositoryPersonaggio;
+    private final GestoreEventi gestoreEventi;
 
-    public GestorePartita(Personaggio personaggio, GeneratoreMappa generatoreMappa, GestoreEventi gestoreEventi, Repository<Personaggio, String> repositoryPersonaggio) {
-        this.personaggio = personaggio;
-        this.repositoryPersonaggio = repositoryPersonaggio;
-        Mappa mappa = generatoreMappa.genera();
+    public GestorePartita(String nomePersonaggio, int larghezza, int altezza) {
+        this.gestoreEventi = new GestoreEventi();
+        this.personaggio = new Personaggio(nomePersonaggio);
+        this.mappa = new GeneratoreMappa(larghezza, altezza).genera();
         this.esploratore = new Esploratore(mappa, gestoreEventi);
-        this.gestoreRisorse = new GestoreRisorse(personaggio.getInventario());
-        this.gestoreNemici = new GestoreNemici();
-        this.gestoreCombattimento = new GestoreCombattimento(gestoreEventi);
+        // Segna la cella di partenza come visitata
+        esploratore.getCellaCorrente().setVisitata(true);
     }
 
-    public void salva() {
-        repositoryPersonaggio.salva(personaggio);
+    public boolean muovi(Direzione direzione) {
+        return esploratore.muovi(direzione);
     }
 
-    // getter per i controller JavaFX
-    public Personaggio getPersonaggio() { return personaggio; }
-    public Esploratore getEsploratore() { return esploratore; }
-    public GestoreRisorse getGestoreRisorse() { return gestoreRisorse; }
-    public GestoreNemici getGestoreNemici() { return gestoreNemici; }
-    public GestoreCombattimento getGestoreCombattimento() { return gestoreCombattimento; }
+    public Cella getCellaCorrente() {
+        return esploratore.getCellaCorrente();
+    }
+
+    public Personaggio getPersonaggio() {
+        return personaggio;
+    }
+
+    public Mappa getMappa() {
+        return mappa;
+    }
+
+    public Esploratore getEsploratore() {
+        return esploratore;
+    }
+
+    public GestoreEventi getGestoreEventi() {
+        return gestoreEventi;
+    }
 }

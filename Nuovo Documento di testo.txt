@@ -1,9 +1,0 @@
-Progettone da 30 e lode 
-gioco di ruolo 
-
-git add.
-
-git commit -m
-
-
-git push

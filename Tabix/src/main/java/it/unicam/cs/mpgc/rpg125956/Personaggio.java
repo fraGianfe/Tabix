@@ -1,13 +1,13 @@
 package it.unicam.cs.mpgc.rpg125956;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Rappresenta il personaggio giocante.
+ * Gestisce statistiche, salute, energia ed esperienza.
+ */
+public class Personaggio implements Vivente {
 
-public class Personaggio {
-
-    private String nome;
-    private Inventario inventario;
-    private Statistiche statistiche;
+    private final String nome;
+    private final Statistiche statistiche;
     private int livello;
     private int salute;
     private int saluteMax;
@@ -15,7 +15,6 @@ public class Personaggio {
     private int energiaMax;
     private int esperienza;
     private int esperienzaPerLivello;
-
 
     public Personaggio(String nome) {
         this.nome = nome;
@@ -26,18 +25,14 @@ public class Personaggio {
         this.energia = energiaMax;
         this.esperienza = 0;
         this.esperienzaPerLivello = 100;
-        List<Abilita> abilita = new ArrayList<>();
-        this.inventario = new Inventario();
         this.statistiche = new Statistiche();
     }
-
 
     @Override
     public void applicaDanno(int danno) {
         int dannoEffettivo = Math.max(0, danno - statistiche.getDifesa());
         this.salute = Math.max(0, this.salute - dannoEffettivo);
     }
-
 
     @Override
     public void recuperaSalute(int quantita) {
@@ -49,9 +44,23 @@ public class Personaggio {
         return salute > 0;
     }
 
-    public void incrementaSalute(int quantita) { recuperaSalute(quantita); }
+    @Override
+    public int getSalute() {
+        return salute;
+    }
 
-    public void decrementaSalute(int quantita) { applicaDanno(quantita); }
+    @Override
+    public int getSaluteMax() {
+        return saluteMax;
+    }
+
+    public void incrementaSalute(int quantita) {
+        recuperaSalute(quantita);
+    }
+
+    public void decrementaSalute(int quantita) {
+        applicaDanno(quantita);
+    }
 
     public void incrementaEnergia(int quantita) {
         this.energia = Math.min(energiaMax, this.energia + quantita);
@@ -75,38 +84,32 @@ public class Personaggio {
         this.energiaMax += 10;
         this.salute = saluteMax;
         this.energia = energiaMax;
-        this.esperienzaPerLivello = (int)(esperienzaPerLivello * 1.5);
+        this.esperienzaPerLivello = (int) (esperienzaPerLivello * 1.5);
         statistiche.incrementaPerLivello(livello);
-        sbloccoAbilitaPerLivello();
     }
 
+    public String getNome() {
+        return nome;
+    }
 
-    @Override
-    public int calcolaDanno() {
-        return statistiche.getAttacco() + (int)(Math.random() * 10);
+    public int getLivello() {
+        return livello;
     }
 
     public int getEnergia() {
         return energia;
     }
-    public int getSalute() {
-        return salute;
-    }
-    public int getSaluteMax() {
-        return saluteMax;
-    }
-    public int getLivello() {
-        return livello;
-    }
+
     public int getEnergiaMax() {
         return energiaMax;
     }
 
-    public String getNome() {
-        return nome;}
+    public Statistiche getStatistiche() {
+        return statistiche;
+    }
 
-    public Inventario getInventario() {
-        return inventario;
+    @Override
+    public String toString() {
+        return nome + " (Lv." + livello + " HP:" + salute + "/" + saluteMax + ")";
     }
 }
-

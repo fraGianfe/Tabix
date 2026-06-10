@@ -2,21 +2,20 @@ package it.unicam.cs.mpgc.rpg125956;
 
 import java.util.Random;
 
+/**
+ * Genera casualmente una mappa di gioco composta da celle
+ * con diversi tipi di ambiente e risorse sparse.
+ */
 public class GeneratoreMappa {
-
 
     private final int larghezza;
     private final int altezza;
     private final Random random;
-    private final FabbricaNemici fabbricaNemici;
-    private final FabbricaRisorse fabbricaRisorse;
 
-    public GeneratoreMappa (int larghezza, int altezza, FabbricaNemici fabbricaNemici, FabbricaRisorse fabbricaRisorse){
+    public GeneratoreMappa(int larghezza, int altezza) {
         this.larghezza = larghezza;
         this.altezza = altezza;
         this.random = new Random();
-        this.fabbricaNemici = fabbricaNemici;
-        this.fabbricaRisorse = fabbricaRisorse;
     }
 
     public Mappa genera() {
@@ -24,10 +23,9 @@ public class GeneratoreMappa {
         for (int y = 0; y < altezza; y++)
             for (int x = 0; x < larghezza; x++)
                 griglia[y][x] = new Cella(x, y, scegliTipoAmbiente());
-        popolaRisorseENemici(griglia);
+        popolaRisorse(griglia);
         return new Mappa(griglia, larghezza, altezza);
     }
-
 
     private TipoAmbiente scegliTipoAmbiente() {
         int n = random.nextInt(100);
@@ -36,15 +34,14 @@ public class GeneratoreMappa {
         return TipoAmbiente.CAVERNA;
     }
 
-    private void popolaRisorseENemici(Cella[][] griglia) {
+    private void popolaRisorse(Cella[][] griglia) {
+        TipoRisorsa[] tipi = TipoRisorsa.values();
         for (Cella[] riga : griglia)
-            for (Cella cella : riga) {
-                if (random.nextInt(100) < 30)
-                    cella.aggiungiRisorsa(
-                            fabbricaRisorse.creaPerAmbiente(cella.getTipo()));
-                if (random.nextInt(100) < 20)
-                    cella.aggiungiNemico(
-                            fabbricaNemici.creaPerAmbiente(cella.getTipo()));
-            }
+            for (Cella cella : riga)
+                if (random.nextInt(100) < 35) {
+                    TipoRisorsa tipo = tipi[random.nextInt(tipi.length)];
+                    int quantita = 1 + random.nextInt(3);
+                    cella.aggiungiRisorsa(new Risorsa(tipo, quantita));
+                }
     }
 }

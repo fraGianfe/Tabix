@@ -21,12 +21,20 @@ public class Esploratore {
             posizioneX = nuovoX;
             posizioneY = nuovoY;
             cella.setVisitata(true);
-            gestoreEventi.pubblica(new EventoCella(cella));
+            gestoreEventi.pubblica("MOSSA:" + direzione.name());
             return true;
         }).orElse(false);
     }
 
     public Cella getCellaCorrente() {
         return mappa.getCella(posizioneX, posizioneY).orElseThrow();
+    }
+
+    public int getPosizioneX() {
+        return posizioneX;
+    }
+
+    public int getPosizioneY() {
+        return posizioneY;
     }
 }

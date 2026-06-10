@@ -1,14 +1,16 @@
 plugins {
-    id 'java-library'
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
-group = 'it.rpg'
+group = 'it.unicam.cs.mpgc.rpg'
 version = '1.0-SNAPSHOT'
 
-java { sourceCompatibility = JavaVersion.VERSION_21 }
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 javafx {
     version = "21"
@@ -16,7 +18,7 @@ javafx {
 }
 
 application {
-    mainClass = 'it.unicam.cs.mpgc.rpg.s125956.Main'
+    mainClass = 'it.unicam.cs.mpgc.rpg125956.Main'
 }
 
 repositories {
@@ -29,4 +31,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-test { useJUnitPlatform() }
+test {
+    useJUnitPlatform()
+}
