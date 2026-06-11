@@ -35,13 +35,20 @@ public class GeneratoreMappa {
     }
 
     private void popolaRisorse(Cella[][] griglia) {
-        TipoRisorsa[] tipi = TipoRisorsa.values();
         for (Cella[] riga : griglia)
             for (Cella cella : riga)
                 if (random.nextInt(100) < 35) {
-                    TipoRisorsa tipo = tipi[random.nextInt(tipi.length)];
+                    TipoRisorsa tipo = risorsaPerAmbiente(cella.getTipo());
                     int quantita = 1 + random.nextInt(3);
                     cella.aggiungiRisorsa(new Risorsa(tipo, quantita));
                 }
+    }
+
+    private TipoRisorsa risorsaPerAmbiente(TipoAmbiente ambiente) {
+        return switch (ambiente) {
+            case FORESTA -> TipoRisorsa.ERBE;
+            case CAVERNA -> TipoRisorsa.MINERALI;
+            case STANZA  -> TipoRisorsa.CIBO;
+        };
     }
 }
