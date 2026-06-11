@@ -18,4 +18,7 @@ public class Mappa {
             return Optional.empty();
         return Optional.of(griglia[y][x]);
     }
+
+    public int getLarghezza() { return larghezza; }
+    public int getAltezza()   { return altezza; }
 }

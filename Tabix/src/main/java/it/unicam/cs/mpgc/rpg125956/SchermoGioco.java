@@ -24,17 +24,20 @@ import javafx.scene.text.FontWeight;
 public class SchermoGioco extends BorderPane {
 
     /** Dimensione in pixel di ogni cella della mappa. */
-    private static final int DIM_CELLA = 46;
+    private static final int DIM_CELLA = 40;
     /** Dimensione (in px) di un singolo "pixel" dello sprite 8x8. */
     private static final int PIXEL_SPRITE = 5;
 
     private final GestorePartita gestorePartita;
 
     // Griglia: ogni StackPane contiene un Rectangle (sfondo) e opzionalmente il Canvas sprite
-    private final StackPane[][] celle = new StackPane[10][10];
+    private StackPane[][] celle;
 
     // Sprite del personaggio (Canvas pixel-art 40x40 px)
     private final Canvas spritePersonaggio;
+
+    // Sprite nemici per ogni cella (null se la cella non ha nemici)
+    private Canvas[][] spriteNemici;
 
     // Posizione attuale dello sprite nella griglia (per spostarlo tra celle)
     private int spriteX = -1;
@@ -78,9 +81,16 @@ public class SchermoGioco extends BorderPane {
             case RIGHT, D -> Direzione.EST;
             default       -> null;
         };
-        if (dir != null) {
-            gestorePartita.muovi(dir);
+        if (dir != null) eseguiMossa(dir);
+    }
+
+    private void eseguiMossa(Direzione dir) {
+        if (gestorePartita.muovi(dir)) {
             aggiornaPosizione();
+            Cella cella = gestorePartita.getCellaCorrente();
+            if (cella.haNemico()) {
+                App.mostraSchermoScontro(gestorePartita, cella);
+            }
         }
     }
 
@@ -119,8 +129,12 @@ public class SchermoGioco extends BorderPane {
 
     private void costruisciGriglia(GridPane griglia) {
         Mappa mappa = gestorePartita.getMappa();
-        for (int y = 0; y < 10; y++) {
-            for (int x = 0; x < 10; x++) {
+        int cols = mappa.getLarghezza();
+        int rows = mappa.getAltezza();
+        celle = new StackPane[rows][cols];
+        spriteNemici = new Canvas[rows][cols];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 Cella cella = mappa.getCella(x, y).orElse(null);
                 if (cella == null) continue;
 
@@ -136,6 +150,14 @@ public class SchermoGioco extends BorderPane {
                 StackPane pannello = new StackPane(sfondo);
                 pannello.setMinSize(DIM_CELLA, DIM_CELLA);
                 pannello.setMaxSize(DIM_CELLA, DIM_CELLA);
+
+                if (cella.haNemico()) {
+                    Canvas sp = creaSpriteNemico(cella.getNemico().get().getTipo());
+                    sp.setVisible(false);
+                    pannello.getChildren().add(sp);
+                    spriteNemici[y][x] = sp;
+                }
+
                 celle[y][x] = pannello;
                 griglia.add(pannello, x, y);
             }
@@ -166,8 +188,7 @@ public class SchermoGioco extends BorderPane {
         );
         btn.setFocusTraversable(false); // non rubare il focus alla scena (serve per la tastiera)
         btn.setOnAction(e -> {
-            gestorePartita.muovi(dir);
-            aggiornaPosizione();
+            eseguiMossa(dir);
             requestFocus();
         });
         return btn;
@@ -188,14 +209,16 @@ public class SchermoGioco extends BorderPane {
         spriteY = py;
 
         // --- Aggiorna colore/opacità di tutte le celle ---
-        for (int y = 0; y < 10; y++) {
-            for (int x = 0; x < 10; x++) {
+        int cols = mappa.getLarghezza();
+        int rows = mappa.getAltezza();
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 Cella cella = mappa.getCella(x, y).orElse(null);
                 if (cella == null) continue;
                 Rectangle sfondo = (Rectangle) celle[y][x].getChildren().get(0);
 
                 if (x == px && y == py) {
-                    sfondo.setFill(Color.web("#455a64")); // sfondo cella del giocatore
+                    sfondo.setFill(Color.web("#455a64"));
                     sfondo.setOpacity(1.0);
                 } else if (cella.isVisitata()) {
                     sfondo.setFill(colorePerTipo(cella.getTipo()));
@@ -203,6 +226,13 @@ public class SchermoGioco extends BorderPane {
                 } else {
                     sfondo.setFill(colorePerTipo(cella.getTipo()));
                     sfondo.setOpacity(0.25);
+                }
+
+                // Mostra sprite nemico se è nel raggio di 4 celle (Manhattan distance)
+                Canvas spNemico = spriteNemici[y][x];
+                if (spNemico != null) {
+                    int dist = Math.abs(x - px) + Math.abs(y - py);
+                    spNemico.setVisible(cella.haNemico() && dist <= 4);
                 }
             }
         }
@@ -316,6 +346,92 @@ public class SchermoGioco extends BorderPane {
                 }
             }
         }
+        return canvas;
+    }
+
+    // ===================================================================
+    //  Sprite nemici pixel-art 8x8  (4px per "pixel" → 32x32 canvas)
+    // ===================================================================
+
+    private static final int PIXEL_NEMICO = 4;
+
+    private Canvas creaSpriteNemico(TipoNemico tipo) {
+        int[][] pixel;
+        Color[] colori;
+
+        switch (tipo) {
+            case GOBLIN -> {
+                pixel = new int[][] {
+                    { 0, 0, 1, 1, 1, 1, 0, 0 },
+                    { 0, 1, 2, 1, 1, 2, 1, 0 },
+                    { 0, 1, 1, 3, 3, 1, 1, 0 },
+                    { 0, 0, 4, 4, 4, 4, 0, 0 },
+                    { 0, 4, 4, 5, 5, 4, 4, 0 },
+                    { 0, 0, 4, 4, 4, 4, 0, 0 },
+                    { 0, 0, 4, 0, 0, 4, 0, 0 },
+                    { 0, 0, 6, 0, 0, 6, 0, 0 },
+                };
+                colori = new Color[] {
+                    Color.TRANSPARENT,
+                    Color.web("#A5D6A7"),  // 1 pelle verde chiara
+                    Color.web("#B71C1C"),  // 2 occhi rossi
+                    Color.web("#FFFFFF"),  // 3 denti
+                    Color.web("#2E7D32"),  // 4 corpo verde scuro
+                    Color.web("#795548"),  // 5 cintura
+                    Color.web("#1B5E20"),  // 6 stivali
+                };
+            }
+            case SCHELETRO -> {
+                pixel = new int[][] {
+                    { 0, 0, 1, 1, 1, 1, 0, 0 },
+                    { 0, 1, 2, 1, 1, 2, 1, 0 },
+                    { 0, 1, 1, 3, 3, 1, 1, 0 },
+                    { 0, 0, 0, 1, 1, 0, 0, 0 },
+                    { 0, 1, 0, 1, 1, 0, 1, 0 },
+                    { 0, 0, 1, 1, 1, 1, 0, 0 },
+                    { 0, 0, 1, 0, 0, 1, 0, 0 },
+                    { 0, 0, 1, 0, 0, 1, 0, 0 },
+                };
+                colori = new Color[] {
+                    Color.TRANSPARENT,
+                    Color.web("#ECEFF1"),  // 1 bianco osso
+                    Color.web("#263238"),  // 2 occhi scuri
+                    Color.web("#90A4AE"),  // 3 denti grigi
+                };
+            }
+            default -> { // TROLL
+                pixel = new int[][] {
+                    { 0, 1, 1, 1, 1, 1, 1, 0 },
+                    { 1, 1, 2, 1, 1, 2, 1, 1 },
+                    { 1, 1, 1, 1, 1, 1, 1, 1 },
+                    { 1, 1, 3, 1, 1, 3, 1, 1 },
+                    { 1, 4, 1, 1, 1, 1, 4, 1 },
+                    { 0, 1, 1, 1, 1, 1, 1, 0 },
+                    { 0, 1, 1, 0, 0, 1, 1, 0 },
+                    { 0, 1, 0, 0, 0, 0, 1, 0 },
+                };
+                colori = new Color[] {
+                    Color.TRANSPARENT,
+                    Color.web("#5D4037"),  // 1 marrone corpo
+                    Color.web("#FFF176"),  // 2 occhi gialli
+                    Color.web("#3E2723"),  // 3 narici
+                    Color.web("#4E342E"),  // 4 mani scure
+                };
+            }
+        }
+
+        int dim = 8 * PIXEL_NEMICO;
+        Canvas canvas = new Canvas(dim, dim);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setImageSmoothing(false);
+        for (int ry = 0; ry < 8; ry++)
+            for (int rx = 0; rx < 8; rx++) {
+                int c = pixel[ry][rx];
+                if (c != 0) {
+                    gc.setFill(colori[c]);
+                    gc.fillRect(rx * PIXEL_NEMICO, ry * PIXEL_NEMICO, PIXEL_NEMICO, PIXEL_NEMICO);
+                }
+            }
         return canvas;
     }
 

@@ -14,8 +14,8 @@ public class App extends Application {
         primaryStage = stage;
         primaryStage.setTitle("Tabix RPG - UniCam 125956");
         primaryStage.setResizable(true);
-        primaryStage.setMinWidth(820);
-        primaryStage.setMinHeight(660);
+        primaryStage.setMinWidth(960);
+        primaryStage.setMinHeight(860);
         mostraSchermoCreazione();
         primaryStage.show();
     }
@@ -28,7 +28,13 @@ public class App extends Application {
 
     public static void mostraSchermoGioco(GestorePartita gestorePartita) {
         SchermoGioco schermo = new SchermoGioco(gestorePartita);
-        Scene scena = new Scene(schermo, 820, 650);
+        Scene scena = new Scene(schermo, 960, 860);
+        primaryStage.setScene(scena);
+    }
+
+    public static void mostraSchermoScontro(GestorePartita gestorePartita, Cella cella) {
+        SchermoScontro schermo = new SchermoScontro(gestorePartita, cella);
+        Scene scena = new Scene(schermo, 560, 480);
         primaryStage.setScene(scena);
     }
 }

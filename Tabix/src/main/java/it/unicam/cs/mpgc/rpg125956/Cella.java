@@ -3,6 +3,7 @@ package it.unicam.cs.mpgc.rpg125956;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Rappresenta una singola cella della mappa di gioco.
@@ -15,6 +16,7 @@ public class Cella {
     private final TipoAmbiente tipo;
     private boolean visitata;
     private final List<Risorsa> risorse;
+    private Nemico nemico;
 
     public Cella(int x, int y, TipoAmbiente tipo) {
         this.x = x;
@@ -51,6 +53,11 @@ public class Cella {
     public List<Risorsa> getRisorse() {
         return Collections.unmodifiableList(risorse);
     }
+
+    public void setNemico(Nemico nemico)  { this.nemico = nemico; }
+    public void rimuoviNemico()           { this.nemico = null; }
+    public boolean haNemico()             { return nemico != null && nemico.isVivo(); }
+    public Optional<Nemico> getNemico()   { return Optional.ofNullable(nemico); }
 
     @Override
     public String toString() {

@@ -59,7 +59,7 @@ public class SchermoCreazione extends VBox {
                 avviso.showAndWait();
                 return;
             }
-            GestorePartita partita = new GestorePartita(nome, 10, 10);
+            GestorePartita partita = new GestorePartita(nome, 16, 16);
             App.mostraSchermoGioco(partita);
         });
 
