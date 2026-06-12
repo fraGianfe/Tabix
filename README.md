@@ -1,82 +1,52 @@
-# Progetto.modellazione.26
+# Tabix RPG
 
-Breve descrizione del progetto (2-3 righe):  
-Spiega cosa fa il programma e a cosa serve.
+Tabix è un gioco di ruolo (RPG) con esplorazione a turni sviluppato in Java con interfaccia grafica JavaFX.
+Il giocatore crea un personaggio e lo guida attraverso una mappa 16×16 generata proceduralmente,
+raccogliendo risorse, affrontando nemici casuali (Goblin, Scheletro, Troll) in combattimento a turni
+e guadagnando esperienza per salire di livello.
 
 ---
 
-## 🚀 Come eseguire il progetto
+## Come eseguire il progetto
 
 ### Prerequisiti
-- Java 25 (LTS)
-- Gradle
+- Java 21 (LTS)
+- Gradle (il wrapper `gradlew` è incluso nel repository)
 
 ### Istruzioni
 
 ```bash
 git clone <url-del-repository>
-cd <nome-cartella>
+cd Tabix
 ```
 
 ### Build del progetto
+
 ```bash
 ./gradlew build
 ```
 
 ### Esecuzione
+
 ```bash
 ./gradlew run
 ```
 
 ---
 
-## 🤖 Uso di strumenti di AI
+## Uso di strumenti di AI
 
-Indicare **se e come** sono stati utilizzati strumenti di AI (es. ChatGPT, Copilot, ecc.).
-Descrivere in modo chiaro **per quali attività** e **con quale livello di intervento personale**.
+Durante lo sviluppo del progetto è stato utilizzato **Claude** come supporto nelle seguenti attività:
 
-È importante dimostrare che:
-* il codice è stato **compreso**
-* l’AI è stata usata come **supporto**, non come sostituto
----
+- Comprensione e raffinamento della struttura a classi e interfacce del progetto
+- Supporto nella progettazione del sistema ad eventi (`GestoreEventi`) e del pattern Repository
+- Suggerimenti sulla generazione procedurale della mappa e sulla distribuzione di risorse e nemici
+- Chiarimento di errori di compilazione e di problemi legati all'integrazione con JavaFX
+- Revisione e miglioramento iterativo del codice, sempre compreso, discusso e adattato manualmente
 
-📌 Per una descrizione più dettagliata dell’uso dell’AI, utilizzare la **Wiki del repository**.
+In ogni caso, il codice prodotto è stato compreso, verificato e integrato personalmente.
+L'AI è stata usata come strumento di supporto e confronto, non come sostituto del ragionamento dello sviluppatore.
 
-
-### Esempi :
-
-* Utilizzato ChatGPT per:
-
-  * comprendere concetti teorici (es. differenza tra classi e oggetti)
-  * chiarire errori di compilazione
-  * suggerimenti su struttura del codice
-
-* Utilizzato Copilot per:
-
-  * autocompletamento di metodi semplici
-  * generazione di codice ripetitivo (es. getter/setter)
-
-* Utilizzato ChatGPT per generare una prima versione di una funzione, poi:
-
-  * modificata e adattata manualmente
-  * testata e corretta personalmente
-
----
-
-Oppure:
-- Non sono stati utilizzati strumenti di AI
-
----
-
-
-## ⚠️ Nota
-
-Questo è un template: **modificare e adattare tutte le parti necessarie** in base al proprio progetto
-
-
-
-
-
-
+> Per una descrizione più dettagliata, consultare la **Wiki del repository**.
 
 Visualizzazione di README_template.md.
